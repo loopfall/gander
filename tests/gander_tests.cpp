@@ -188,6 +188,15 @@ private slots:
         QCOMPARE(Listing::siblings(dir.path(), true).size(), 5);
     }
 
+    void comparesNaturallyInAnyLocale()
+    {
+        QVERIFY(Listing::naturalCompare("img2.jpg", "img10.jpg") < 0);
+        QVERIFY(Listing::naturalCompare("img010.jpg", "img9.jpg") > 0);
+        QVERIFY(Listing::naturalCompare("Apple", "banana") < 0);
+        QVERIFY(Listing::naturalCompare("a", "a1") < 0);
+        QCOMPARE(Listing::naturalCompare("same", "same"), 0);
+    }
+
     void cacheKeyFollowsChanges()
     {
         QTemporaryDir dir;

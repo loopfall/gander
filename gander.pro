@@ -9,7 +9,7 @@ LIBS += -lLayerShellQtInterface
 
 TARGET = gander
 TEMPLATE = app
-VERSION = 0.1.0
+VERSION = 0.1.1
 DEFINES += GANDER_VERSION=\\\"$$VERSION\\\"
 
 HEADERS += \

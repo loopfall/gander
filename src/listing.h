@@ -25,4 +25,7 @@ bool parseArchiveLine(const QString &line, QString *name, qint64 *bytes, bool *f
 // the folder listing uses.
 QStringList siblings(const QString &directory, bool includeHidden);
 
+// Negative, zero or positive, like strcmp, in natural order.
+int naturalCompare(const QString &a, const QString &b);
+
 } // namespace Listing

@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.1.1
+
+- Arrow keys step through a folder in natural order (track 2 before track
+  10) on every system. Systems without a language set (the C locale) sorted
+  numbers as text before.
+
 ## 0.1.0
 
 First release.

@@ -1,6 +1,5 @@
 #include "listing.h"
 
-#include <QCollator>
 #include <QCoreApplication>
 #include <QDir>
 #include <QDirIterator>
@@ -15,14 +14,52 @@
 
 namespace Listing {
 
+// Natural order (track 2 before track 10), done by hand: QCollator's numeric
+// mode silently does nothing under the C locale, which systemd services and
+// minimal systems often run with.
+int naturalCompare(const QString &a, const QString &b) {
+    qsizetype i = 0, j = 0;
+    while (i < a.size() && j < b.size()) {
+        if (a[i].isDigit() && b[j].isDigit()) {
+            qsizetype ei = i, ej = j;
+            while (ei < a.size() && a[ei].isDigit())
+                ++ei;
+            while (ej < b.size() && b[ej].isDigit())
+                ++ej;
+            // Compare the numbers by value: skip leading zeros, then the
+            // longer run is larger, then digit by digit.
+            qsizetype si = i, sj = j;
+            while (si + 1 < ei && a[si] == '0')
+                ++si;
+            while (sj + 1 < ej && b[sj] == '0')
+                ++sj;
+            if (ei - si != ej - sj)
+                return ei - si < ej - sj ? -1 : 1;
+            for (qsizetype k = 0; k < ei - si; ++k)
+                if (a[si + k] != b[sj + k])
+                    return a[si + k] < b[sj + k] ? -1 : 1;
+            i = ei;
+            j = ej;
+            continue;
+        }
+        const QChar ca = a[i].toCaseFolded(), cb = b[j].toCaseFolded();
+        if (ca != cb) {
+            const int order = QString::localeAwareCompare(QString(ca), QString(cb));
+            return order != 0 ? order : (ca < cb ? -1 : 1);
+        }
+        ++i;
+        ++j;
+    }
+    if (i < a.size() || j < b.size())
+        return i < a.size() ? 1 : -1;
+    return QString::compare(a, b);
+}
+
 static void sortNaturally(QFileInfoList &entries) {
-    QCollator collator;
-    collator.setNumericMode(true);
-    collator.setCaseSensitivity(Qt::CaseInsensitive);
-    std::sort(entries.begin(), entries.end(), [&](const QFileInfo &a, const QFileInfo &b) {
+    std::sort(entries.begin(), entries.end(), [](const QFileInfo &a, const QFileInfo &b) {
         if (a.isDir() != b.isDir())
             return a.isDir();
-        return collator.compare(a.fileName(), b.fileName()) < 0;
+        return naturalCompare(a.fileName(), b.fileName()) < 0;
     });
 }
 
