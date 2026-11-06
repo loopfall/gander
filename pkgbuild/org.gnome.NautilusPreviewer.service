@@ -1,0 +1,4 @@
+[D-BUS Service]
+Name=org.gnome.NautilusPreviewer
+Exec=/usr/bin/gander daemon
+SystemdService=gander.service

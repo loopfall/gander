@@ -1,0 +1,38 @@
+pkgname=gander
+pkgver=0.1.0
+pkgrel=1
+pkgdesc='Quick Look for Linux: press Space on a file in Nautilus and see it instantly'
+arch=('x86_64' 'aarch64')
+license=('MIT')
+depends=('qt6-base' 'qt6-declarative' 'qt6-wayland' 'qt6-multimedia' 'qt6-multimedia-ffmpeg' 'qt6-svg'
+         'layer-shell-qt' 'poppler-qt6' 'taglib' 'libarchive' 'ffmpeg' 'xdg-utils' 'glib2')
+optdepends=('libreoffice-fresh: previews of Word, Excel, PowerPoint and OpenDocument files'
+            'qt6-imageformats: WebP, TIFF and other image formats'
+            'kimageformats: HEIC, AVIF, RAW and PSD images'
+            'nautilus: Space in the file manager opens the preview')
+makedepends=('gcc' 'make')
+# Gander answers the same D-Bus name Nautilus calls for Space.
+provides=('sushi')
+conflicts=('sushi')
+source=()
+sha256sums=()
+
+build() {
+  cd "$startdir/.."
+  ./bin/build
+}
+
+package() {
+  cd "$startdir/.."
+  install -Dm755 build/gander "$pkgdir/usr/bin/gander"
+  install -Dm644 LICENSE "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
+  install -Dm644 "$startdir/gander.svg" "$pkgdir/usr/share/icons/hicolor/scalable/apps/gander.svg"
+  install -Dm644 "$startdir/gander.desktop" "$pkgdir/usr/share/applications/gander.desktop"
+  install -Dm644 "$startdir/org.gnome.NautilusPreviewer.service" "$pkgdir/usr/share/dbus-1/services/org.gnome.NautilusPreviewer.service"
+  install -Dm644 "$startdir/gander.service" "$pkgdir/usr/lib/systemd/user/gander.service"
+  install -Dm644 "$startdir/hyprland.lua" "$pkgdir/usr/share/gander/hyprland.lua"
+  # Started with the graphical session, so the first Space is as fast as
+  # every other one.
+  install -dm755 "$pkgdir/usr/lib/systemd/user/graphical-session.target.wants"
+  ln -s ../gander.service "$pkgdir/usr/lib/systemd/user/graphical-session.target.wants/gander.service"
+}

@@ -1,0 +1,5 @@
+/build/
+/pkgbuild/pkg/
+/pkgbuild/src/
+/pkgbuild/gander/
+*.pkg.tar.*

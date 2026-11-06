@@ -1,0 +1,16 @@
+[Desktop Entry]
+Type=Application
+Name=Gander
+Name[sk]=Gander
+Name[cs]=Gander
+Name[de]=Gander
+Comment=Quick look at any file
+Comment[sk]=Rýchly náhľad akéhokoľvek súboru
+Comment[cs]=Rychlý náhled jakéhokoli souboru
+Comment[de]=Schnellansicht für jede Datei
+Exec=gander %f
+Icon=gander
+Terminal=false
+NoDisplay=true
+Categories=Utility;Viewer;
+StartupWMClass=gander

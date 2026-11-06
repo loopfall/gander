@@ -1,0 +1,12 @@
+#!/bin/sh
+set -eu
+
+ROOT="$(CDPATH= cd -- "$(dirname -- "$0")/.." && pwd)"
+"$ROOT/bin/build"
+cd "$ROOT/pkgbuild"
+makepkg -fsi "$@"
+
+# The package replaces Sushi's D-Bus name; restart the service so the new
+# binary answers Space in Nautilus right away instead of after the next login.
+systemctl --user daemon-reload
+systemctl --user restart gander.service || true

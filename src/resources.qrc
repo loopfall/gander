@@ -1,0 +1,30 @@
+<RCC>
+    <qresource prefix="/">
+        <file alias="Main.qml">Main.qml</file>
+        <file alias="Format.js">Format.js</file>
+        <file alias="HeaderBar.qml">HeaderBar.qml</file>
+        <file alias="HeaderButton.qml">HeaderButton.qml</file>
+        <file alias="ImagePreview.qml">ImagePreview.qml</file>
+        <file alias="VideoPreview.qml">VideoPreview.qml</file>
+        <file alias="AudioPreview.qml">AudioPreview.qml</file>
+        <file alias="PdfPreview.qml">PdfPreview.qml</file>
+        <file alias="TextPreview.qml">TextPreview.qml</file>
+        <file alias="TablePreview.qml">TablePreview.qml</file>
+        <file alias="ListPreview.qml">ListPreview.qml</file>
+        <file alias="FontPreview.qml">FontPreview.qml</file>
+        <file alias="GenericPreview.qml">GenericPreview.qml</file>
+        <file alias="HelpOverlay.qml">HelpOverlay.qml</file>
+        <file alias="icons/close.svg">icons/close.svg</file>
+        <file alias="icons/expand.svg">icons/expand.svg</file>
+        <file alias="icons/collapse.svg">icons/collapse.svg</file>
+        <file alias="icons/open.svg">icons/open.svg</file>
+        <file alias="icons/play.svg">icons/play.svg</file>
+        <file alias="icons/pause.svg">icons/pause.svg</file>
+        <file alias="icons/volume.svg">icons/volume.svg</file>
+        <file alias="icons/mute.svg">icons/mute.svg</file>
+        <file alias="i18n/en.json">i18n/en.json</file>
+        <file alias="i18n/sk.json">i18n/sk.json</file>
+        <file alias="i18n/cs.json">i18n/cs.json</file>
+        <file alias="i18n/de.json">i18n/de.json</file>
+    </qresource>
+</RCC>

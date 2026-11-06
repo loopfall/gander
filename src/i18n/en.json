@@ -1,0 +1,8 @@
+{
+  "%n pages": { "one": "%n page", "other": "%n pages" },
+  "%n lines": { "one": "%n line", "other": "%n lines" },
+  "%n rows": { "one": "%n row", "other": "%n rows" },
+  "%n items": { "one": "%n item", "other": "%n items" },
+  "%n files": { "one": "%n file", "other": "%n files" },
+  "and %n more": { "one": "and %n more", "other": "and %n more" }
+}
