@@ -1,0 +1,11 @@
+name: Feature request
+description: A file type or an idea Gander should handle
+labels: [enhancement]
+body:
+  - type: textarea
+    id: idea
+    attributes:
+      label: What would you like?
+      description: The file type or behaviour, and what you would use it for.
+    validations:
+      required: true

@@ -1,0 +1,26 @@
+#!/bin/sh
+# Builds the package and publishes it as a GitHub release for the version in
+# pkgbuild/PKGBUILD. The asset is uploaded twice: under its versioned name and
+# as gander-x86_64.pkg.tar.zst, the stable name install.sh downloads.
+set -eu
+
+ROOT="$(CDPATH= cd -- "$(dirname -- "$0")/.." && pwd)"
+cd "$ROOT"
+
+version="$(sed -n 's/^pkgver=//p' pkgbuild/PKGBUILD)"
+tag="v$version"
+
+[ -z "$(git status --porcelain)" ] || { echo "Commit your changes first." >&2; exit 1; }
+grep -q "^## $version" CHANGELOG.md || { echo "Add a '## $version' section to CHANGELOG.md first." >&2; exit 1; }
+
+bin/test
+(cd pkgbuild && rm -f gander-*.pkg.tar.zst && makepkg -f)
+package="$(ls pkgbuild/gander-"$version"-*-x86_64.pkg.tar.zst | grep -v debug)"
+cp "$package" "$ROOT/build/gander-x86_64.pkg.tar.zst"
+
+# The notes are this version's CHANGELOG section.
+notes="$(awk -v v="## $version" '$0 ~ "^## " { p = index($0, v) == 1; next } p' CHANGELOG.md)"
+
+git tag -a "$tag" -m "Gander $version"
+git push origin main "$tag"
+gh release create "$tag" "$package" "$ROOT/build/gander-x86_64.pkg.tar.zst" --title "Gander $version" --notes "$notes"

@@ -1,75 +1,132 @@
+<div align="center">
+
+<img src="pkgbuild/gander.svg" width="88" alt="">
+
 # Gander
 
-Quick Look for Linux. Select a file in Nautilus, press **Space**, and see it:
-photos, video, music with its cover art, PDFs, Word/Excel/PowerPoint, Markdown,
-code, CSV, folders, archives and fonts. Space again closes it.
+**Quick Look for Linux.** Select a file, press <kbd>Space</kbd>, see it. Instantly.
 
-![Gander previewing a song](docs/screenshot.png)
+[![CI](https://github.com/loopfall/gander/actions/workflows/ci.yml/badge.svg)](https://github.com/loopfall/gander/actions/workflows/ci.yml)
+[![Release](https://img.shields.io/github/v/release/loopfall/gander)](https://github.com/loopfall/gander/releases/latest)
+[![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 
-Gander replaces Sushi, GNOME's previewer, by taking over the D-Bus name
-Nautilus calls on Space (`org.gnome.NautilusPreviewer`). Nautilus needs no
-plugin and no patch. It's built for Omarchy (Hyprland, Qt, follows the theme
-accent and language) and works on any wlroots-style Wayland desktop.
+<img src="docs/screenshot.png" width="720" alt="Gander previewing a song: cover art, title, artist and a waveform">
 
-## Why it's fast
+</div>
 
-- **Always warm.** A small daemon starts with your session and keeps its
-  window, GPU context and every viewer ready. Pressing Space only maps a
-  surface. On a mid-range iGPU the first frame lands in 8 to 20 ms.
-- **Paints before it decodes.** The window takes its final shape from the file
-  header alone. Nautilus's existing thumbnail fills the first frame, and the
-  real image replaces it a moment later.
-- **Decodes at screen size.** JPEGs decode at reduced scale (about 100 ms for
-  24 MP), and the full resolution loads only when you zoom in.
-- **Reads ahead.** While you look at one photo, its neighbours decode in the
-  background. Stepping to the next one takes about 1 ms.
-- **Converts Office files once.** LibreOffice turns a document into a PDF in
-  its own private profile, so it never clashes with an open LibreOffice
-  window. The result is cached by path, size and modification time. While it
-  converts, the document's text shows straight from the file.
-- **Floats above everything.** The preview is a layer-shell overlay, so
-  nothing tiles, reflows or animates out of turn.
+Gander is the macOS spacebar preview, rebuilt for Linux. In **Files**
+(Nautilus), select any file and press <kbd>Space</kbd>. A preview opens over
+everything: a photo, a playing video, a song with its cover, a PDF or Word
+document, code, a spreadsheet. Arrow keys step through the folder, and
+<kbd>Space</kbd> again closes it.
 
-## Keys
-
-| Key | Action |
-| --- | --- |
-| Space, Esc, Q | Close |
-| ← → ↑ ↓ | Previous or next file (in Nautilus, moves its selection) |
-| Enter | Open in the default app |
-| F | Fill the screen |
-| + − 0, wheel, pinch, double-click | Zoom |
-| K / J / L | Play or pause, back 5 s, forward 5 s |
-| M | Mute |
-| PgUp PgDn Home End | Scroll documents |
-| Delete, F2 | Move to trash, rename (from Nautilus) |
-| ? | Show the keys |
+It replaces GNOME's slower previewer (Sushi). Nothing in Nautilus needs to
+change.
 
 ## Install
 
+On **Arch Linux** or **[Omarchy](https://omarchy.org)**, paste this into a terminal:
+
 ```sh
-bin/install
+curl -fsSL https://raw.githubusercontent.com/loopfall/gander/main/install.sh | bash
 ```
 
-This builds the package and installs it with `makepkg -si`. Pacman asks to
-remove `sushi`; Gander provides the same service. The script then restarts
-`gander.service`.
+It asks for your password once. When pacman asks whether to replace `sushi`,
+answer **y**. Then open Files, select something, and press <kbd>Space</kbd>.
 
-For Hyprland, also add the line in `/usr/share/gander/hyprland.lua` to your
-config. It skips the compositor's layer fade; Gander animates its own opening.
+<details>
+<summary>Other ways to install</summary>
 
-Office previews need `libreoffice-fresh`. HEIC, AVIF and RAW photos need
-`kimageformats`.
-
-## From anywhere else
+**Download the package yourself.** Get `gander-x86_64.pkg.tar.zst` from the
+[latest release](https://github.com/loopfall/gander/releases/latest), then:
 
 ```sh
-gander FILE     # preview FILE; run it again to close
+sudo pacman -U gander-x86_64.pkg.tar.zst
+systemctl --user restart gander
+```
+
+**From source.** This works on any distribution with Qt 6.9+, layer-shell-qt,
+poppler-qt6 and TagLib 2:
+
+```sh
+git clone https://github.com/loopfall/gander && cd gander
+bin/install        # Arch: builds and installs the package
+# elsewhere: bin/build, then copy the files listed in pkgbuild/PKGBUILD's package()
+```
+
+</details>
+
+### Optional extras
+
+| Install | To preview |
+| --- | --- |
+| `libreoffice-fresh` | Word, Excel, PowerPoint, OpenDocument |
+| `kimageformats` | HEIC (iPhone), AVIF, RAW, PSD |
+| `qt6-imageformats` | WebP, TIFF |
+
+```sh
+sudo pacman -S --needed libreoffice-fresh kimageformats qt6-imageformats
+```
+
+## What it previews
+
+<img src="docs/gallery.png" alt="Gander previewing a photo, a song, source code and a folder">
+
+| | |
+| --- | --- |
+| 🖼️ **Photos** | Zoom with the wheel, a pinch or a double-click. EXIF rotation is respected; GIF and WebP animate |
+| 🎬 **Video** | Plays at once, with sound, a seek bar and controls |
+| 🎵 **Music** | Cover art, title, artist, album and a waveform you can click to seek |
+| 📄 **PDF** | Every page, sharp at any zoom |
+| 📝 **Office** | Word, Excel, PowerPoint and OpenDocument, rendered by LibreOffice. The text appears at once while it renders |
+| 📑 **Markdown** | Formatted, like on GitHub |
+| 💻 **Code and text** | Syntax highlighting for 100+ file types |
+| 📊 **CSV / TSV** | As a table |
+| 📁 **Folders** | Contents and total size |
+| 📦 **Archives** | zip, tar.gz, 7z, rar, iso and more, listed without unpacking |
+| 🔤 **Fonts** | The font set in itself |
+
+## Keys
+
+| Key | Does |
+| --- | --- |
+| <kbd>Space</kbd> <kbd>Esc</kbd> | Close |
+| <kbd>←</kbd> <kbd>→</kbd> <kbd>↑</kbd> <kbd>↓</kbd> | Previous or next file |
+| <kbd>Enter</kbd> | Open in its usual app |
+| <kbd>F</kbd> | Fill the screen |
+| <kbd>+</kbd> <kbd>−</kbd> <kbd>0</kbd> | Zoom in, out, reset |
+| <kbd>K</kbd> / <kbd>J</kbd> / <kbd>L</kbd> | Play/pause, back 5 s, forward 5 s |
+| <kbd>M</kbd> | Mute |
+| <kbd>Delete</kbd> / <kbd>F2</kbd> | Move to trash / rename (from Files) |
+| <kbd>?</kbd> | Show all keys |
+
+## Why it's fast
+
+Most previewers start a program when you press Space. Gander is already
+running, so pressing Space only shows a window that is ready.
+
+- **About 10 to 20 ms to the first frame.** The window, the GPU context and
+  every viewer stay loaded in a small background service.
+- **Pictures before pixels.** The file header gives the window its final
+  size, and the thumbnail Files already made fills it at once. The full image
+  replaces it about 100 ms later, even for a 24 MP photo, because it decodes
+  at screen size and not at full resolution.
+- **Reads ahead.** While you look at one photo, the next ones decode in the
+  background. Stepping through a folder of photos takes about 1 ms per photo.
+- **Converts Office files once.** A document is turned into a PDF the first
+  time and cached, so the second look is instant.
+- **No window juggling.** The preview floats above your desktop, so tiling
+  window managers don't rearrange anything.
+
+## Use it outside Files
+
+```sh
+gander photo.jpg     # preview; run it again to close
 gander close
 ```
 
-The command is a thin D-Bus client and returns at once, so it suits a
-keybinding or a terminal file manager. For yazi:
+Bind it to a key, or use it from a terminal file manager. For example,
+**yazi** (`~/.config/yazi/keymap.toml`):
 
 ```toml
 [[manager.prepend_keymap]]
@@ -77,26 +134,78 @@ on = "<Space>"
 run = 'shell -- gander "$0"'
 ```
 
-## Develop
+## Troubleshooting
+
+<details>
+<summary><b>Space in Files does nothing, or opens the old previewer</b></summary>
+
+Check that the service is running:
 
 ```sh
-bin/build
-bin/test
-GANDER_TRACE=1 QT_FORCE_STDERR_LOGGING=1 build/gander daemon   # timings per step
-QT_QPA_PLATFORM=offscreen GANDER_SNAPSHOT=/tmp/shot.png build/gander daemon
+systemctl --user status gander
 ```
 
-The source is in `src/`:
+If it isn't, start it with `systemctl --user restart gander`. If the old
+previewer still opens, Sushi is still installed: `sudo pacman -R sushi`.
 
-| Files | Role |
+</details>
+
+<details>
+<summary><b>Office documents show only text</b></summary>
+
+Install LibreOffice: `sudo pacman -S libreoffice-fresh`. The first document
+takes a couple of seconds to render; every later look at it is instant.
+
+</details>
+
+<details>
+<summary><b>It doesn't start on Sway, river or another compositor</b></summary>
+
+The service needs your Wayland session's environment. Add this to your
+compositor's startup:
+
+```sh
+systemctl --user import-environment WAYLAND_DISPLAY XDG_CURRENT_DESKTOP
+```
+
+</details>
+
+<details>
+<summary><b>Something else</b></summary>
+
+[Open an issue](https://github.com/loopfall/gander/issues/new/choose) and
+include the output of `journalctl --user -u gander -n 50 --no-pager`.
+
+</details>
+
+## Uninstall
+
+```sh
+sudo pacman -R gander
+sudo pacman -S sushi      # optional: brings back GNOME's previewer
+```
+
+On Hyprland, you can also delete the `gander` line the installer added to
+`~/.config/hypr/looknfeel.lua`.
+
+## How it works
+
+Files (Nautilus) asks a D-Bus service named `org.gnome.NautilusPreviewer` to
+show a file when you press Space. That service was Sushi; Gander takes over
+the name. It's a C++ and Qt Quick app:
+
+| Part | Job |
 | --- | --- |
-| `inspector` | The fast first look at a file |
-| `previewer` | State, D-Bus requests and the worker-thread loaders |
-| `overlay` | The layer shell |
-| `audio`, `pdf`, `office`, `textloader`, `listing` | One per format family |
-| `*.qml` | The window and its viewers |
+| `src/inspector.*` | The first look at a file, in under a millisecond |
+| `src/previewer.*` | State, D-Bus, and the background loaders |
+| `src/overlay.*` | Floating above everything (wlr-layer-shell) |
+| `src/audio.*` `pdf.*` `office.*` `textloader.*` `listing.*` | One per kind of file |
+| `src/*.qml` | The window and its viewers |
+
+[CONTRIBUTING.md](CONTRIBUTING.md) explains how to build, test and measure
+it.
 
 ## License
 
-MIT. Theme and language following are adapted from Omacut and Monologue
-(David Heinemeier Hansson).
+[MIT](LICENSE). Theme and language following are adapted from Omacut and
+Monologue (David Heinemeier Hansson).

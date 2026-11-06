@@ -1,0 +1,37 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  build:
+    name: Build and test on Arch Linux
+    runs-on: ubuntu-latest
+    container: archlinux:latest
+    steps:
+      - name: Install dependencies
+        run: |
+          pacman -Syu --noconfirm --needed base-devel git qt6-base qt6-declarative qt6-wayland \
+            qt6-multimedia qt6-multimedia-ffmpeg qt6-svg layer-shell-qt poppler-qt6 taglib \
+            libarchive ffmpeg xdg-utils glib2 shared-mime-info
+
+      - uses: actions/checkout@v4
+
+      - name: Build
+        run: bin/build
+
+      - name: Test
+        run: bin/test
+
+      - name: Package
+        run: |
+          useradd -m builder
+          chown -R builder .
+          su builder -c "cd pkgbuild && makepkg -f --nodeps"
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: gander-package
+          path: pkgbuild/gander-*-x86_64.pkg.tar.zst
