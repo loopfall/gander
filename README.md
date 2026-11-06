@@ -74,17 +74,17 @@ sudo pacman -S --needed libreoffice-fresh kimageformats qt6-imageformats
 
 | | |
 | --- | --- |
-| 🖼️ **Photos** | Zoom with the wheel, a pinch or a double-click. EXIF rotation is respected; GIF and WebP animate |
-| 🎬 **Video** | Plays at once, with sound, a seek bar and controls |
-| 🎵 **Music** | Cover art, title, artist, album and a waveform you can click to seek |
-| 📄 **PDF** | Every page, sharp at any zoom |
-| 📝 **Office** | Word, Excel, PowerPoint and OpenDocument, rendered by LibreOffice. The text appears at once while it renders |
-| 📑 **Markdown** | Formatted, like on GitHub |
-| 💻 **Code and text** | Syntax highlighting for 100+ file types |
-| 📊 **CSV / TSV** | As a table |
-| 📁 **Folders** | Contents and total size |
-| 📦 **Archives** | zip, tar.gz, 7z, rar, iso and more, listed without unpacking |
-| 🔤 **Fonts** | The font set in itself |
+| **Photos** | Zoom with the wheel, a pinch or a double-click. EXIF rotation is respected; GIF and WebP animate |
+| **Video** | Plays at once, with sound, a seek bar and controls |
+| **Music** | Cover art, title, artist, album and a waveform you can click to seek |
+| **PDF** | Every page, sharp at any zoom |
+| **Office** | Word, Excel, PowerPoint and OpenDocument, rendered by LibreOffice. The text appears at once while it renders |
+| **Markdown** | Formatted, like on GitHub |
+| **Code and text** | Syntax highlighting for 100+ file types |
+| **CSV / TSV** | As a table |
+| **Folders** | Contents and total size |
+| **Archives** | zip, tar.gz, 7z, rar, iso and more, listed without unpacking |
+| **Fonts** | The font set in itself |
 
 ## Keys
 
